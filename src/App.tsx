@@ -1,13 +1,15 @@
 import React, { useState } from "react";
+import produce from "immer";
+import { bubbleSort as bubbleSortAlgo } from "./algorithms/bubble-sort";
 
 //fixed size for the array
-const arraySize = 5;
+const arraySize = 20;
 
 //function for generating a new array as needed
 const generateNewArray = (): number[] => {
     let newArray: number[] = [];
     for (let i = 0; i < arraySize; i++) {
-        newArray[i] = Math.round(Math.random() * 50);
+        newArray[i] = Math.round(Math.random() * 50) + 1;
     }
     console.log(newArray);
     return newArray;
@@ -15,12 +17,15 @@ const generateNewArray = (): number[] => {
 
 function App() {
     const [array, setArray] = useState<number[]>(generateNewArray);
+    const bubbleSort = () => {
+        setArray(produce(array, bubbleSortAlgo));
+    };
     return (
         <div className="App">
             <div>
-                {array.map((item) => (
+                {array.map((item, i) => (
                     <div
-                        key={item}
+                        key={i}
                         style={{
                             border: "solid",
                             margin: 5,
@@ -35,12 +40,14 @@ function App() {
                 ))}
             </div>
             <div>
-                <button>Bubble Sort</button>
+                <button onClick={bubbleSort}>Bubble Sort</button>
                 <button>Selection Sort</button>
                 <button>Insertion Sort</button>
                 <button>Quick Sort</button>
                 <button>Merge Sort</button>
-                <button onClick={() => setArray([1, 2, 3])}>Reset Array</button>
+                <button onClick={() => setArray(generateNewArray())}>
+                    Reset Array
+                </button>
             </div>
         </div>
     );
