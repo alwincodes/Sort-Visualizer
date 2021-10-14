@@ -1,26 +1,49 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+
+//fixed size for the array
+const arraySize = 5;
+
+//function for generating a new array as needed
+const generateNewArray = (): number[] => {
+    let newArray: number[] = [];
+    for (let i = 0; i < arraySize; i++) {
+        newArray[i] = Math.round(Math.random() * 50);
+    }
+    console.log(newArray);
+    return newArray;
+};
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const [array, setArray] = useState<number[]>(generateNewArray);
+    return (
+        <div className="App">
+            <div>
+                {array.map((item) => (
+                    <div
+                        key={item}
+                        style={{
+                            border: "solid",
+                            margin: 5,
+                            padding: 2,
+                            height: 20,
+                            width: `${item * 3}0px`,
+                            backgroundColor: "turquoise",
+                        }}
+                    >
+                        {item}
+                    </div>
+                ))}
+            </div>
+            <div>
+                <button>Bubble Sort</button>
+                <button>Selection Sort</button>
+                <button>Insertion Sort</button>
+                <button>Quick Sort</button>
+                <button>Merge Sort</button>
+                <button onClick={() => setArray([1, 2, 3])}>Reset Array</button>
+            </div>
+        </div>
+    );
 }
 
 export default App;
