@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 
-import { bubbleSort as bubbleSortAlgo } from "./algorithms/bubble-sort";
+import {
+    bubbleSort as bubbleSortAlgo,
+    SwapData,
+} from "./algorithms/bubble-sort";
 
 //fixed size for the array
-const arraySize = 20;
+const arraySize = 40;
 //animation speed
 const animationSpeed = 100;
 
@@ -17,6 +20,27 @@ const generateNewArray = (): number[] => {
     return newArray;
 };
 
+const animate = (swapData: SwapData[], sortBars: HTMLElement[]): void => {
+    for (let i = 0; i < swapData.length; i++) {
+        let firstIndex = swapData[i].i;
+        let secondIndex = swapData[i].j;
+        setTimeout(() => {
+            sortBars[firstIndex].style.backgroundColor = "red";
+            sortBars[secondIndex].style.backgroundColor = "red";
+            //swap them
+            let tempH = sortBars[firstIndex].style.width;
+            sortBars[firstIndex].style.width =
+                sortBars[secondIndex].style.width;
+            sortBars[secondIndex].style.width = tempH;
+            //removing the color
+            setTimeout(() => {
+                sortBars[firstIndex].style.backgroundColor = "turquoise";
+                sortBars[secondIndex].style.backgroundColor = "turquoise";
+            }, animationSpeed - 20);
+        }, i * animationSpeed - 20);
+    }
+};
+
 function App() {
     const [array, setArray] = useState<number[]>(generateNewArray);
 
@@ -27,25 +51,14 @@ function App() {
                 "sortBars"
             ) as HTMLCollectionOf<HTMLElement>
         );
-        for (let i = 0; i < swapData.length; i++) {
-            let firstIndex = swapData[i].i;
-            let secondIndex = swapData[i].j;
-            setTimeout(() => {
-                sortBars[firstIndex].style.backgroundColor = "red";
-                sortBars[secondIndex].style.backgroundColor = "red";
-                //swap them
-                let tempH = sortBars[firstIndex].style.width;
-                sortBars[firstIndex].style.width =
-                    sortBars[secondIndex].style.width;
-                sortBars[secondIndex].style.width = tempH;
-                //removing the color
-                setTimeout(() => {
-                    sortBars[firstIndex].style.backgroundColor = "turquoise";
-                    sortBars[secondIndex].style.backgroundColor = "turquoise";
-                }, animationSpeed - 50);
-            }, i * animationSpeed - 20);
-        }
+        animate(swapData, sortBars);
     };
+
+    const selectionSort = () => {};
+
+    const quickSort = () => {};
+
+    const mergeSort = () => {};
 
     return (
         <div className="App">
@@ -55,11 +68,10 @@ function App() {
                         key={i}
                         className="sortBars"
                         style={{
-                            border: "solid",
-                            margin: 4,
+                            margin: 2,
                             padding: 2,
-                            height: 20,
-                            width: `${item * 3}0px`,
+                            height: 2,
+                            width: `${item * 2}0px`,
                             backgroundColor: "turquoise",
                         }}
                     ></div>
