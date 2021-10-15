@@ -6,6 +6,7 @@ import {
 } from "./algorithms/bubble-sort";
 import { selectionSort as selectionSortAlgo } from "./algorithms/selection-sort";
 import { quickSort as quickSortAlgo } from "./algorithms/quick-sort";
+import { mergeSort as mergeSortAlgo } from "./algorithms/merge-sort";
 
 //fixed size for the array
 const arraySize = 100;
@@ -20,11 +21,16 @@ const generateNewArray = (): number[] => {
     for (let i = 0; i < arraySize; i++) {
         newArray[i] = Math.round(Math.random() * 50) + 1;
     }
-    console.log(newArray);
     return newArray;
 };
 
-const animate = (swapData: SwapData[], sortBars: HTMLElement[]): void => {
+//this is a mess need to improve this to get better animations
+const animate = (swapData: SwapData[]): void => {
+    const sortBars = Array.from(
+        document.getElementsByClassName(
+            "sortBars"
+        ) as HTMLCollectionOf<HTMLElement>
+    );
     for (let i = 0; i < swapData.length; i++) {
         let firstIndex = swapData[i].i;
         let secondIndex = swapData[i].j;
@@ -51,39 +57,34 @@ function App() {
     const [array, setArray] = useState<number[]>(generateNewArray);
 
     const bubbleSort = () => {
-        const { swapList: swapData, sortedArray } = bubbleSortAlgo(array);
-        const sortBars = Array.from(
-            document.getElementsByClassName(
-                "sortBars"
-            ) as HTMLCollectionOf<HTMLElement>
-        );
-        console.log(array, sortedArray);
-        animate(swapData, sortBars);
+        const { swapList: swapData } = bubbleSortAlgo(array);
+        animate(swapData);
     };
 
     const selectionSort = () => {
-        const { swapList: swapData, sortedArray } = selectionSortAlgo(array);
-        const sortBars = Array.from(
-            document.getElementsByClassName(
-                "sortBars"
-            ) as HTMLCollectionOf<HTMLElement>
-        );
-        console.log(array, sortedArray);
-        animate(swapData, sortBars);
+        const { swapList: swapData } = selectionSortAlgo(array);
+        animate(swapData);
     };
 
     const quickSort = () => {
-        const { swapList: swapData, sortedArray } = quickSortAlgo(array);
-        const sortBars = Array.from(
-            document.getElementsByClassName(
-                "sortBars"
-            ) as HTMLCollectionOf<HTMLElement>
-        );
-        console.log(array, sortedArray);
-        animate(swapData, sortBars);
+        const { swapList: swapData } = quickSortAlgo(array);
+        animate(swapData);
     };
 
-    const mergeSort = () => {};
+    //not working as of now diffrent logic need to be applied
+    const mergeSort = () => {
+        const { swapList: swapData, sortedArray } = mergeSortAlgo(array);
+        setArray(sortedArray);
+        console.log(swapData);
+        // animate(swapData);
+    };
+
+    const stop = () => {
+        for (let i = 0; i < timeouts.length; i++) {
+            clearInterval(timeouts[i]);
+        }
+        setArray(generateNewArray());
+    };
 
     return (
         <div className="App">
@@ -107,10 +108,11 @@ function App() {
                 <button onClick={selectionSort}>Selection Sort</button>
                 <button>Insertion Sort</button>
                 <button onClick={quickSort}>Quick Sort</button>
-                <button>Merge Sort</button>
+                <button onClick={mergeSort}>Merge Sort</button>
                 <button onClick={() => setArray(generateNewArray())}>
                     Reset Array
                 </button>
+                <button onClick={stop}>Stop!</button>
             </div>
         </div>
     );
