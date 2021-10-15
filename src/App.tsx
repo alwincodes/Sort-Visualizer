@@ -1,6 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import produce from "immer";
-import { bubbleSort as bubbleSortAlgo } from "./algorithms/bubble-sort";
+import {
+    bubbleSort as bubbleSortAlgo,
+    SwapData,
+} from "./algorithms/bubble-sort";
+import { swap } from "./utils/swap";
 
 //fixed size for the array
 const arraySize = 20;
@@ -17,26 +21,37 @@ const generateNewArray = (): number[] => {
 
 function App() {
     const [array, setArray] = useState<number[]>(generateNewArray);
+    const [swapdata, setSwapData] = useState<SwapData[]>([]);
+
     const bubbleSort = () => {
-        setArray(produce(array, bubbleSortAlgo));
+        const swapData = bubbleSortAlgo(array);
+        const sortBars = document.getElementsByClassName("sortBars");
+        for (let i = 0; i < swapData.length; i++) {
+            let firstIndex = swapData[i].i;
+            let secondIndex = swapData[i].j;
+            setTimeout(() => {
+                sortBars[firstIndex].innerHTML = "compared";
+                sortBars[secondIndex].innerHTML = "compared";
+            }, i * 100);
+        }
     };
+
     return (
         <div className="App">
             <div>
                 {array.map((item, i) => (
                     <div
                         key={i}
+                        className="sortBars"
                         style={{
                             border: "solid",
-                            margin: 5,
+                            margin: 4,
                             padding: 2,
                             height: 20,
                             width: `${item * 3}0px`,
                             backgroundColor: "turquoise",
                         }}
-                    >
-                        {item}
-                    </div>
+                    ></div>
                 ))}
             </div>
             <div>
