@@ -17,7 +17,7 @@ export const bubbleSort = (stateArr: number[]) => {
         }
     }
     return {
-        sortedArr: arr,
+        sortedArray: arr,
         swapList,
     };
 };

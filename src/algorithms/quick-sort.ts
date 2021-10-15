@@ -19,7 +19,7 @@ const quickSortAlgo = (
     l: number,
     h: number
 ) => {
-    while (l < h) {
+    if (l < h) {
         let m = partision(arr, swapList, l, h);
         quickSortAlgo(arr, swapList, l, m - 1);
         quickSortAlgo(arr, swapList, m + 1, h);

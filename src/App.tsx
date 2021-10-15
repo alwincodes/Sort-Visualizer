@@ -4,10 +4,11 @@ import {
     bubbleSort as bubbleSortAlgo,
     SwapData,
 } from "./algorithms/bubble-sort";
-import { selectionSort as SelectionSortAlgo } from "./algorithms/selection-sort";
+import { selectionSort as selectionSortAlgo } from "./algorithms/selection-sort";
+import { quickSort as quickSortAlgo } from "./algorithms/quick-sort";
 
 //fixed size for the array
-const arraySize = 40;
+const arraySize = 100;
 //animation speed
 const animationSpeed = 100;
 //timouts
@@ -48,27 +49,39 @@ const animate = (swapData: SwapData[], sortBars: HTMLElement[]): void => {
 
 function App() {
     const [array, setArray] = useState<number[]>(generateNewArray);
+
     const bubbleSort = () => {
-        const { swapList: swapData } = bubbleSortAlgo(array);
+        const { swapList: swapData, sortedArray } = bubbleSortAlgo(array);
         const sortBars = Array.from(
             document.getElementsByClassName(
                 "sortBars"
             ) as HTMLCollectionOf<HTMLElement>
         );
+        console.log(array, sortedArray);
         animate(swapData, sortBars);
     };
 
     const selectionSort = () => {
-        const { swapList: swapData } = SelectionSortAlgo(array);
+        const { swapList: swapData, sortedArray } = selectionSortAlgo(array);
         const sortBars = Array.from(
             document.getElementsByClassName(
                 "sortBars"
             ) as HTMLCollectionOf<HTMLElement>
         );
+        console.log(array, sortedArray);
         animate(swapData, sortBars);
     };
 
-    const quickSort = () => {};
+    const quickSort = () => {
+        const { swapList: swapData, sortedArray } = quickSortAlgo(array);
+        const sortBars = Array.from(
+            document.getElementsByClassName(
+                "sortBars"
+            ) as HTMLCollectionOf<HTMLElement>
+        );
+        console.log(array, sortedArray);
+        animate(swapData, sortBars);
+    };
 
     const mergeSort = () => {};
 
@@ -81,7 +94,7 @@ function App() {
                         className="sortBars"
                         style={{
                             margin: 2,
-                            padding: 2,
+                            padding: 1,
                             height: 2,
                             width: `${item * 2}0px`,
                             backgroundColor: "turquoise",
@@ -93,7 +106,7 @@ function App() {
                 <button onClick={bubbleSort}>Bubble Sort</button>
                 <button onClick={selectionSort}>Selection Sort</button>
                 <button>Insertion Sort</button>
-                <button>Quick Sort</button>
+                <button onClick={quickSort}>Quick Sort</button>
                 <button>Merge Sort</button>
                 <button onClick={() => setArray(generateNewArray())}>
                     Reset Array
