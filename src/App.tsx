@@ -96,15 +96,18 @@ const mergeAnimate = (mergeData: MergeData[], animationSpeed: number) => {
 function App() {
     const [animationSpeed, setAnimSpeed] = useState<number>(100);
     const [array, setArray] = useState<number[]>(generateNewArray(arrSize));
+    const [sorting, setSorting] = useState<boolean>(false);
 
     const bubbleSort = () => {
         const { swapList: swapData } = bubbleSortAlgo(array);
         animate(swapData, animationSpeed);
+        setSorting(true);
     };
 
     const selectionSort = () => {
         const { swapList: swapData } = selectionSortAlgo(array);
         animate(swapData, animationSpeed);
+        setSorting(true);
     };
 
     const quickSort = () => {
@@ -118,6 +121,7 @@ function App() {
         // setArray(sortedArray);
         console.log(mergeData);
         mergeAnimate(mergeData, animationSpeed);
+        setSorting(true);
     };
 
     //this is to stop all the swap operations in the callback queue
@@ -126,6 +130,7 @@ function App() {
             clearInterval(timeouts[i]);
         }
         setArray(generateNewArray(arrSize));
+        setSorting(false);
     };
 
     const animSpeedChanger = (e: React.FormEvent<HTMLInputElement>) => {
@@ -135,23 +140,36 @@ function App() {
     return (
         <div className="App">
             <div className="buttons">
-                <button className="mergeOptions" onClick={bubbleSort}>
+                <button
+                    className="mergeOptions"
+                    disabled={sorting}
+                    onClick={bubbleSort}
+                >
                     Bubble Sort
                 </button>
-                <button className="mergeOptions" onClick={selectionSort}>
+                <button
+                    className="mergeOptions"
+                    disabled={sorting}
+                    onClick={selectionSort}
+                >
                     Selection Sort
                 </button>
                 {/* <button>Insertion Sort</button> */}
-                <button className="mergeOptions " onClick={quickSort}>
+                <button
+                    className="mergeOptions "
+                    disabled={sorting}
+                    onClick={quickSort}
+                >
                     Quick Sort
                 </button>
-                <button className="mergeOptions" onClick={mergeSort}>
+                <button
+                    className="mergeOptions"
+                    disabled={sorting}
+                    onClick={mergeSort}
+                >
                     Merge Sort
                 </button>
-                <button
-                    className="mergeOptions warning"
-                    onClick={() => setArray(generateNewArray(arrSize))}
-                >
+                <button className="mergeOptions warning" onClick={stop}>
                     Reset Array
                 </button>
                 <button className="mergeOptions danger" onClick={stop}>
@@ -161,6 +179,7 @@ function App() {
                     Faster
                     <input
                         onChange={animSpeedChanger}
+                        disabled={sorting}
                         type="range"
                         min="10"
                         max="160"
