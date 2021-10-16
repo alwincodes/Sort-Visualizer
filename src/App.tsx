@@ -113,6 +113,7 @@ function App() {
     const quickSort = () => {
         const { swapList: swapData } = quickSortAlgo(array);
         animate(swapData, animationSpeed);
+        setSorting(true);
     };
 
     //not working as of now diffrent logic need to be applied
