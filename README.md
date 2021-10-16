@@ -1,4 +1,9 @@
-# Getting Started with Create React App
+# Sort Visualizer
+
+This project was created to showcase the working of different sorting algorithms in a graphical way, showing algorithms inner working
+in a very visual way can help people understand algorithms in a much better way
+
+## Getting Started with thisproject
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 

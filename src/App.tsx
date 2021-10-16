@@ -17,13 +17,21 @@ these functions are async this array below is used to keep track of these async 
 */
 const timeouts: ReturnType<typeof setTimeout>[] = [];
 
+//size of the array dynamic according to screen size
+const arrSize = window.innerHeight / 4 - 20;
+
 //function for generating a new array as needed
 const generateNewArray = (arraySize: number): number[] => {
     let newArray: number[] = [];
     for (let i = 0; i < arraySize; i++) {
-        newArray[i] = Math.round(Math.random() * 50) + 1;
+        newArray[i] = randomGenerator(1, window.innerWidth - 50);
     }
     return newArray;
+};
+
+//this generates a random number between two limits
+const randomGenerator = (min: number, max: number) => {
+    return Math.floor(Math.random() * (max - min + 1) + min);
 };
 
 //this is a mess need to improve this to get better animations
@@ -57,7 +65,7 @@ const animate = (swapData: SwapData[], animationSpeed: number): void => {
     }
 };
 
-//this if for sorting algorithms which use merging
+//this is for sorting algorithms which use merging
 const mergeAnimate = (mergeData: MergeData[], animationSpeed: number) => {
     const sortBars = Array.from(
         document.getElementsByClassName(
@@ -74,7 +82,7 @@ const mergeAnimate = (mergeData: MergeData[], animationSpeed: number) => {
                 sortBars[index].style.backgroundColor = "red";
                 sortBars[sindex].style.backgroundColor = "magenta";
                 //merge them
-                sortBars[index].style.width = `${value * 2}0px`;
+                sortBars[index].style.width = `${value}px`;
                 //removing the color before next bars are selected for swapping
                 setTimeout(() => {
                     sortBars[index].style.backgroundColor = "turquoise";
@@ -86,7 +94,6 @@ const mergeAnimate = (mergeData: MergeData[], animationSpeed: number) => {
 };
 
 function App() {
-    const [arrSize, setArrSize] = useState<number>(window.innerHeight / 4 - 18);
     const [animationSpeed, setAnimSpeed] = useState<number>(100);
     const [array, setArray] = useState<number[]>(generateNewArray(arrSize));
 
@@ -107,7 +114,7 @@ function App() {
 
     //not working as of now diffrent logic need to be applied
     const mergeSort = () => {
-        const { mergeList: mergeData, sortedArray } = mergeSortAlgo(array);
+        const { mergeList: mergeData } = mergeSortAlgo(array);
         // setArray(sortedArray);
         console.log(mergeData);
         mergeAnimate(mergeData, animationSpeed);
@@ -119,6 +126,10 @@ function App() {
             clearInterval(timeouts[i]);
         }
         setArray(generateNewArray(arrSize));
+    };
+
+    const animSpeedChanger = (e: React.FormEvent<HTMLInputElement>) => {
+        setAnimSpeed(parseInt(e.currentTarget.value));
     };
 
     return (
@@ -147,13 +158,22 @@ function App() {
                     Stop!
                 </button>
             </div>
+            <div>
+                <input
+                    onChange={animSpeedChanger}
+                    type="range"
+                    min="50"
+                    max="200"
+                    value={animationSpeed}
+                />
+            </div>
             <div className="visualizer">
                 {array.map((item, i) => (
                     <div
                         key={i}
                         className="sortBars"
                         style={{
-                            width: `${item * 2}0px`,
+                            width: `${item}px`,
                         }}
                     ></div>
                 ))}
