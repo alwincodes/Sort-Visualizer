@@ -6,10 +6,15 @@ import {
 } from "./algorithms/bubble-sort";
 import { selectionSort as selectionSortAlgo } from "./algorithms/selection-sort";
 import { quickSort as quickSortAlgo } from "./algorithms/quick-sort";
-import { mergeSort as mergeSortAlgo } from "./algorithms/merge-sort";
+import { MergeData, mergeSort as mergeSortAlgo } from "./algorithms/merge-sort";
 import "./app.css";
 
-//timouts
+/*
+Timeouts
+--------
+each of the swapping animations to be performed are functions set to trigger at a set delay by using timeout function in javascript
+these functions are async this array below is used to keep track of these async functions so that we can stop them when needed
+*/
 const timeouts: ReturnType<typeof setTimeout>[] = [];
 
 //function for generating a new array as needed
@@ -22,6 +27,7 @@ const generateNewArray = (arraySize: number): number[] => {
 };
 
 //this is a mess need to improve this to get better animations
+//this is for sorting algorithms which use swapping
 const animate = (swapData: SwapData[], animationSpeed: number): void => {
     const sortBars = Array.from(
         document.getElementsByClassName(
@@ -33,6 +39,7 @@ const animate = (swapData: SwapData[], animationSpeed: number): void => {
         let secondIndex = swapData[i].j;
         timeouts.push(
             setTimeout(() => {
+                //making the swap bars red
                 sortBars[firstIndex].style.backgroundColor = "red";
                 sortBars[secondIndex].style.backgroundColor = "red";
                 //swap them
@@ -40,10 +47,38 @@ const animate = (swapData: SwapData[], animationSpeed: number): void => {
                 sortBars[firstIndex].style.width =
                     sortBars[secondIndex].style.width;
                 sortBars[secondIndex].style.width = tempW;
-                //removing the color
+                //removing the color before next bars are selected for swapping
                 setTimeout(() => {
                     sortBars[firstIndex].style.backgroundColor = "turquoise";
                     sortBars[secondIndex].style.backgroundColor = "turquoise";
+                }, animationSpeed);
+            }, i * animationSpeed)
+        );
+    }
+};
+
+//this if for sorting algorithms which use merging
+const mergeAnimate = (mergeData: MergeData[], animationSpeed: number) => {
+    const sortBars = Array.from(
+        document.getElementsByClassName(
+            "sortBars"
+        ) as HTMLCollectionOf<HTMLElement>
+    );
+    for (let i = 0; i < mergeData.length; i++) {
+        let index = mergeData[i].i;
+        let value = mergeData[i].j;
+        let sindex = mergeData[i].k;
+        timeouts.push(
+            setTimeout(() => {
+                //making the swap bars red
+                sortBars[index].style.backgroundColor = "red";
+                sortBars[sindex].style.backgroundColor = "magenta";
+                //merge them
+                sortBars[index].style.width = `${value * 2}0px`;
+                //removing the color before next bars are selected for swapping
+                setTimeout(() => {
+                    sortBars[index].style.backgroundColor = "turquoise";
+                    sortBars[sindex].style.backgroundColor = "turquoise";
                 }, animationSpeed);
             }, i * animationSpeed)
         );
@@ -72,10 +107,10 @@ function App() {
 
     //not working as of now diffrent logic need to be applied
     const mergeSort = () => {
-        const { swapList: swapData, sortedArray } = mergeSortAlgo(array);
+        const { mergeList: mergeData, sortedArray } = mergeSortAlgo(array);
         // setArray(sortedArray);
-        console.log(swapData);
-        animate(swapData, animationSpeed);
+        console.log(mergeData);
+        mergeAnimate(mergeData, animationSpeed);
     };
 
     //this is to stop all the swap operations in the callback queue

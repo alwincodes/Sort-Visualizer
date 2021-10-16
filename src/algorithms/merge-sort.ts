@@ -1,14 +1,17 @@
 import { SwapData } from "./bubble-sort";
 
+export type MergeData = SwapData & {
+    k: number;
+};
 export const mergeSort = (
     arr: number[]
-): { sortedArray: number[]; swapList: SwapData[] } => {
+): { sortedArray: number[]; mergeList: MergeData[] } => {
     let sortArr = [...arr];
-    let swapList: SwapData[] = [];
-    mergeSortAlgo(sortArr, 0, sortArr.length - 1, swapList);
+    let mergeList: MergeData[] = [];
+    mergeSortAlgo(sortArr, 0, sortArr.length - 1, mergeList);
     return {
         sortedArray: sortArr,
-        swapList,
+        mergeList,
     };
 };
 
@@ -16,13 +19,13 @@ const mergeSortAlgo = (
     arr: number[],
     low: number,
     high: number,
-    swapList: SwapData[]
+    mergeList: MergeData[]
 ) => {
     if (low < high) {
         let mid = Math.floor(low + (high - low) / 2);
-        mergeSortAlgo(arr, low, mid, swapList);
-        mergeSortAlgo(arr, mid + 1, high, swapList);
-        merge(arr, low, mid, high, swapList);
+        mergeSortAlgo(arr, low, mid, mergeList);
+        mergeSortAlgo(arr, mid + 1, high, mergeList);
+        merge(arr, low, mid, high, mergeList);
     }
 };
 
@@ -31,7 +34,7 @@ const merge = (
     low: number,
     mid: number,
     high: number,
-    swapList: SwapData[]
+    mergeList: MergeData[]
 ) => {
     let s1 = mid - low + 1;
     let s2 = high - mid;
@@ -52,11 +55,11 @@ const merge = (
     while (i < s1 && j < s2) {
         if (arr1[i] < arr2[j]) {
             arr[k] = arr1[i];
-            swapList.push({ i: k, j: low + i });
+            mergeList.push({ i: k, j: arr1[i], k: low + i });
             i++;
         } else {
             arr[k] = arr2[j];
-            swapList.push({ i: k, j: mid + 1 + j });
+            mergeList.push({ i: k, j: arr2[j], k: mid + 1 + j });
             j++;
         }
         k++;
@@ -65,13 +68,13 @@ const merge = (
     //if there are anymore items left copy them
     while (i < s1) {
         arr[k] = arr1[i];
-        swapList.push({ i: k, j: low + i });
+        mergeList.push({ i: k, j: arr1[i], k: low + i });
         i++;
         k++;
     }
     while (j < s2) {
         arr[k] = arr2[j];
-        swapList.push({ i: k, j: mid + 1 + j });
+        mergeList.push({ i: k, j: arr2[j], k: mid + 1 + j });
         j++;
         k++;
     }
