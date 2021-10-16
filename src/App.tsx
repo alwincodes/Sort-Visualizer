@@ -18,7 +18,7 @@ these functions are async this array below is used to keep track of these async 
 const timeouts: ReturnType<typeof setTimeout>[] = [];
 
 //size of the array dynamic according to screen size
-const arrSize = window.innerHeight / 4 - 20;
+const arrSize = window.innerHeight / 4 - 30;
 
 //function for generating a new array as needed
 const generateNewArray = (arraySize: number): number[] => {
@@ -157,16 +157,19 @@ function App() {
                 <button className="mergeOptions danger" onClick={stop}>
                     Stop!
                 </button>
+                <div className="slider">
+                    Faster
+                    <input
+                        onChange={animSpeedChanger}
+                        type="range"
+                        min="10"
+                        max="160"
+                        value={animationSpeed}
+                    />
+                    Slower
+                </div>
             </div>
-            <div>
-                <input
-                    onChange={animSpeedChanger}
-                    type="range"
-                    min="50"
-                    max="200"
-                    value={animationSpeed}
-                />
-            </div>
+
             <div className="visualizer">
                 {array.map((item, i) => (
                     <div
